@@ -13,7 +13,7 @@ db.once('open', () => console.log('Connected to Database'))
 app.use(express.json())
 
 const userRouter = require('./route/users')
-
+ 
 //Router Middleware
 app.use('/users', userRouter)
 
