@@ -1,23 +1,29 @@
+require('dotenv').config()
+
 const express = require('express')
 const router = express.Router()
 const User = require('../model/users')
+const jwt = require('jsonwebtoken');
 
 //Create a new user
-router.post('/', async (req, res) => {
+router.post('/signup', async (req, res) => {
     const user = new User({
         name: req.body.name,
         email: req.body.email
     })
     try {
-        const newUser = await user.save()
-        res.status(201).json(newUser)
+        let newUser = await user.save()
+
+        const token = jwt.sign({ name: newUser.name }, process.env.TOKEN_SECERT)
+
+        res.status(201).json({ user: newUser, token: token })
     } catch (err) {
         res.status(400).json({ message: err.message })
     }
 })
 
 //Get all users
-router.get('/', async (req, res) => {
+router.get('/', [auth], async (req, res) => {
     try {
         const users = await User.find()
         res.json(users)
@@ -27,7 +33,7 @@ router.get('/', async (req, res) => {
 })
 
 //Ger single user
-router.get('/:id', getUser, (req, res) => {
+router.get('/:id', [auth, getUser], (req, res) => {
     res.json(res.user)
 })
 
@@ -68,8 +74,25 @@ async function getUser(req, res, next) {
     } catch (err) {
         return res.status(500).json({ message: err.message })
     }
+
     res.user = user
     next()
 }
+
+//Auth middleware
+function auth(req, res, next) {
+    const authHeader = req.headers.authorization
+    try {
+        if (!authHeader) {
+            return res.status(402).json({ message: "Forbbiden" })
+        }
+        jwt.verify(authHeader, process.env.TOKEN_SECERT)
+        next()
+    } catch (err) {
+        return res.status(402).json({ message: err.message })
+    }
+}
+
+
 
 module.exports = router
