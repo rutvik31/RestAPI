@@ -4,12 +4,19 @@ const express = require('express')
 const router = express.Router()
 const User = require('../model/users')
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
 
 //Create a new user
 router.post('/signup', async (req, res) => {
+
+    //Hash Password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+
     const user = new User({
         name: req.body.name,
-        email: req.body.email
+        email: req.body.email,
+        password: hashPassword
     })
     try {
         let newUser = await user.save()
