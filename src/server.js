@@ -12,11 +12,11 @@ db.once('open', () => console.log('Connected to Database'))
 
 app.use(express.json())
 
-const userRouter = require('./route/users')
- 
+const userRouter = require('./route/userRoute')
+
 //Router Middleware
 app.use('/users', userRouter)
 
 var port = process.env.PORT || 3000;
 
-app.listen(port, () =>   console.log('Server is listening on port ' + port + '!'))
+app.listen(port, () => console.log('Server is listening on port ' + port + '!'))
