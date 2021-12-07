@@ -33,11 +33,11 @@ exports.resetPasswordLink = async function (req, res) {
 
         const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`
         await sendEmail(user.email, "Password reset", '${ link }')
-        console.log(link)
+       
         res.send("password reset link sent to your email account")
     } catch (error) {
         res.send("An error occured")
-        console.log(error)
+    
     }
 }
 
@@ -53,7 +53,7 @@ exports.resetPassword = async function (req, res) {
         //Check if user is in the database
         const user = await User.findById(req.params.userId);
         if (!user) return res.status(400).send("invalid link or expired")
-        console.log(user)
+     
         //Validate Token
         const token = await Token.findOne({
             userId: user._id,
@@ -71,6 +71,6 @@ exports.resetPassword = async function (req, res) {
         res.send("password reset sucessfully.")
     } catch (error) {
         res.send("An error occured")
-        console.log(error)
+        
     }
 }

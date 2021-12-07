@@ -20,7 +20,6 @@ const sendEmail = async (email, subject, text) => {
             text: "Please follow this link to reset your password",
         });
 
-        console.log("email sent sucessfully");
     } catch (error) {
         console.log(error, "email not sent");
     }

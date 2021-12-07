@@ -21,17 +21,17 @@ router.post('/password-reset', resetPassword.resetPasswordLink)
 router.post('/password-reset/:userId/:token', resetPassword.resetPassword)
 //Get user
 router.get('/getData', [varify.auth], userCntroller.getData)
-//Edit user
-router.patch('/:id', [varify.auth, getUser], userCntroller.updateUser)
-//Delete User
-router.delete('/:id', [varify.auth, getUser], userCntroller.deleteUser)
+// //Edit user
+// router.patch('/:id', [varify.auth, getUser], userCntroller.updateUser)
+// //Delete User
+// router.delete('/:id', [varify.auth, getUser], userCntroller.deleteUser)
 
 //Todo Routes
-router.post('/addtodo', [varify.auth], todoController.addTodo)
+router.post('/todo', [varify.auth], todoController.addTodo)
 //List  Todo
-router.get('/gettodo', [varify.auth], todoController.getTodoList)
+router.get('/todo', [varify.auth], todoController.getTodoList)
 //Toggle Todo
-router.post('/toggletodo', todoController.toggleTodo)
+router.patch('/todo', todoController.toggleTodo)
 
 // User Route Middleware
 async function getUser(req, res, next) {

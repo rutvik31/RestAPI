@@ -56,7 +56,7 @@ exports.getTodoList = async function (req, res) {
             $addFields: {
                 "createdAt": {
                     $dateToString: {
-                        format: "%d-%m-%Y",
+                        format: "%Y-%m-%d",
                         date: "$createdAt"
                     }
                 }
@@ -76,7 +76,7 @@ exports.getTodoList = async function (req, res) {
 exports.toggleTodo = async function (req, res) {
 
     try {
-        const todo = await Todo.updateOne({ _id: req.body._id }, { isCompleted: !req.body.isCompleted })
+        const todo = await Todo.findByIdAndUpdate(req.body._id, { isCompleted: !req.body.isCompleted })
         return res.status(200).send({ status: "success", data: todo })
     } catch (err) {
         return res.status(400).send({ status: "error", message: "Error updating task" })
