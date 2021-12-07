@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const User = require('../model/users')
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const saltRounds = 10;
 const registerValidation = require('../validation/register')
@@ -18,11 +18,11 @@ exports.register = async function (req, res) {
     //Check if user already in database
     const isExist = await User.findOne({ email: req.body.email });
     if (isExist) {
-        res.status(400).send({ status: "error", message: "email already exists" })
+        return res.status(400).send({ status: "error", message: "Email already exists" })
     }
     //Hash Password
     const salt = await bcrypt.genSalt(saltRounds);
-    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    const hashPassword = await bcrypt.hash(req.body.password, salt)
 
     const user = new User({
         name: req.body.name,
@@ -47,7 +47,7 @@ exports.login = async function (req, res) {
     //Check user credential 
     let user = await User.findOne({ email: req.body.email });
     if (!user) {
-        res.status(404).send({ status: "error", message: "email do not exist" })
+        return res.status(404).send({ status: "error", message: "email do not exist" })
     }
     if (await bcrypt.compare(req.body.password, user.password)) {
         user.password = undefined
@@ -55,7 +55,7 @@ exports.login = async function (req, res) {
         const token = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECERT)
         res.send({ status: "success", data: { token: token } })
     } else {
-        res.status(401).send({ status: "error", message: "user name or password don't match" })
+        res.status(401).send({ status: "error", message: "Email or password don't match" })
     }
 }
 
