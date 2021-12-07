@@ -51,10 +51,27 @@ exports.updateTodo = async function (req, res) {
 //Get a todo
 exports.getTodoList = async function (req, res) {
     const auth = jwt.decode(req.headers.authorization)
-    const todo = await Todo.find({userId: auth._id})
+    const todo = await Todo.aggregate([
+        {
+            $addFields: {
+                "createdAt": {
+                    $dateToString: {
+                        format: "%d-%m-%Y",
+                        date: "$createdAt"
+                    }
+                }
+            },
+        },
+        {
+            $match: {
+                userId: auth._id,
+                createdAt: req.query.date
+            }
+        }
+    ])
     return res.status(200).send({ status: "success", data: todo })
 }
-
+// 
 //Check a todo is completed or not 
 exports.toggleTodo = async function (req, res) {
 
