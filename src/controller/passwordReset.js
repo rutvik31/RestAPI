@@ -32,8 +32,8 @@ exports.resetPasswordLink = async function (req, res) {
         }
 
         const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`
-        await sendEmail(user.email, "Password reset", '${ link }')
-       
+        await sendEmail(user.email, "Password reset", `${ link }`)
+        // console.log(link)
         res.send("password reset link sent to your email account")
     } catch (error) {
         res.send("An error occured")

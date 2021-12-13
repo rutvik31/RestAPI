@@ -15,9 +15,9 @@ const sendEmail = async (email, subject, text) => {
 
         await transporter.sendMail({
             from: process.env.USER,
-            to: "rutvikpandit12@gmail.com",
-            subject: "Reset-Password",
-            text: "Please follow this link to reset your password",
+            to: email,
+            subject: subject,
+            text: text
         });
 
     } catch (error) {

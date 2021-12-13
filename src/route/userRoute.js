@@ -32,22 +32,24 @@ router.post('/todo', [varify.auth], todoController.addTodo)
 router.get('/todo', [varify.auth], todoController.getTodoList)
 //Toggle Todo
 router.patch('/todo', todoController.toggleTodo)
+//Delete Todo
+router.delete('/todo/:_id', todoController.deleteTodo)
 
 // User Route Middleware
-async function getUser(req, res, next) {
-    let user
-    try {
-        user = await User.findById(req.params.id)
-        if (user == null) {
-            return res.status(404).json({ message: 'Cannot find user' })
-        }
-    } catch (err) {
-        return res.status(500).json({ message: err.message })
-    }
+// async function getUser(req, res, next) {
+//     let user
+//     try {
+//         user = await User.findById(req.params.id)
+//         if (user == null) {
+//             return res.status(404).json({ message: 'Cannot find user' })
+//         }
+//     } catch (err) {
+//         return res.status(500).json({ message: err.message })
+//     }
 
-    res.user = user
-    next()
-}
+//     res.user = user
+//     next()
+// }
 
 // // Todo Route Middelware
 // async function getTodo(req, res, next) {

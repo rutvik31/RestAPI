@@ -48,6 +48,16 @@ exports.updateTodo = async function (req, res) {
 
 }
 
+//Delete task 
+exports.deleteTodo = async function (req, res) {
+    try {
+        await Todo.findByIdAndDelete(req.params._id)
+        res.status(200).json({ status: "success", message: "Task Deleted" })
+    } catch {
+        res.status(200).json({ status: "error", message: " Error deleting task" })
+    }
+}
+
 //Get a todo
 exports.getTodoList = async function (req, res) {
     const auth = jwt.decode(req.headers.authorization)
