@@ -4,19 +4,13 @@ const User = require('../model/users')
 const Token = require('../model/token')
 const bcrypt = require('bcrypt')
 const crypto = require("crypto");
-const Joi = require("joi")
 const saltRounds = 10;
 const sendEmail = require('../utility/sendEmails');
 
 //Reset Password Link
 exports.resetPasswordLink = async function (req, res) {
 
-
     try {
-        //Validate User data
-        const schema = Joi.string().min(3).max(250).required().email()
-        const { error } = schema.validate(req.body.email)
-        if (error) return res.status(400).send(error.details[0].message)
 
         //Check if user is in the database
         const user = await User.findOne({ email: req.body.email })
@@ -32,12 +26,12 @@ exports.resetPasswordLink = async function (req, res) {
         }
 
         const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`
-        await sendEmail(user.email, "Password reset", `${ link }`)
+        await sendEmail(user.email, "Password reset", `${link}`)
         // console.log(link)
         res.send("password reset link sent to your email account")
     } catch (error) {
         res.send("An error occured")
-    
+
     }
 }
 
@@ -45,15 +39,11 @@ exports.resetPasswordLink = async function (req, res) {
 exports.resetPassword = async function (req, res) {
 
     try {
-        //Validate User data
-        const schema = Joi.string().min(8).max(30).required();
-        const { error } = schema.validate(req.body.password);
-        if (error) return res.status(400).send(error.details[0].message);
 
         //Check if user is in the database
         const user = await User.findById(req.params.userId);
         if (!user) return res.status(400).send("invalid link or expired")
-     
+
         //Validate Token
         const token = await Token.findOne({
             userId: user._id,
@@ -71,6 +61,6 @@ exports.resetPassword = async function (req, res) {
         res.send("password reset sucessfully.")
     } catch (error) {
         res.send("An error occured")
-        
+
     }
 }

@@ -8,7 +8,6 @@ const varify = require('../auth/authentication')
 const userCntroller = require('../controller/usersController')
 const todoController = require('../controller/todoController')
 const resetPassword = require('../controller/passwordReset')
-const { findById } = require('../model/todo')
 
 //User Routes
 // Register a new user
@@ -21,10 +20,6 @@ router.post('/password-reset', resetPassword.resetPasswordLink)
 router.post('/password-reset/:userId/:token', resetPassword.resetPassword)
 //Get user
 router.get('/getData', [varify.auth], userCntroller.getData)
-// //Edit user
-// router.patch('/:id', [varify.auth, getUser], userCntroller.updateUser)
-// //Delete User
-// router.delete('/:id', [varify.auth, getUser], userCntroller.deleteUser)
 
 //Todo Routes
 router.post('/todo', [varify.auth], todoController.addTodo)

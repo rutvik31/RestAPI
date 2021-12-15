@@ -53,9 +53,9 @@ exports.login = async function (req, res) {
         user.password = undefined
         //Generate Token
         const token = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECERT)
-        res.send({ status: "success", data: { token: token } })
+        return res.send({ status: "success", data: { token: token } })
     } else {
-        res.status(401).send({ status: "error", message: "Email or password don't match" })
+        return res.status(401).send({ status: "error", message: "Email or password don't match" })
     }
 }
 
