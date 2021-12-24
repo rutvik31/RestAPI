@@ -27,7 +27,8 @@ exports.register = async function (req, res) {
     const user = new User({
         name: req.body.name,
         email: req.body.email,
-        password: hashPassword
+        password: hashPassword,
+        photo: req.file.filename
     })
     try {
         await user.save()
@@ -70,17 +71,13 @@ exports.getData = async function (req, res) {
 
 //Update user
 exports.updateUser = async function (req, res) {
-    if (req.body.name !== null) {
-        res.user.name = req.body.name
-    }
-    if (req.body.email !== null) {
-        res.user.email = req.body.email
-    }
     try {
-        let updateUser = await res.user.save()
-        res.json(updateUser)
+        const user = await User.findByIdAndUpdate(req.params._id, req.body, { new: true })   
+        const token = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECERT)
+        return res.status(200).send({ status: "success", data: token })
     } catch (err) {
-        res.status(400).json({ message: err.message })
+        return res.status(400).send({ status: "error", message: "Error updating user" })
+
     }
 }
 

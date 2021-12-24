@@ -2,18 +2,40 @@ require('dotenv').config()
 
 const express = require('express')
 const router = express.Router()
-const User = require('../model/users')
-const Todo = require('../model/todo')
+const multer = require('multer')
+const { v4: uuidv4 } = require('uuid')
+let path = require('path')
 const varify = require('../auth/authentication')
 const userCntroller = require('../controller/usersController')
 const todoController = require('../controller/todoController')
 const resetPassword = require('../controller/passwordReset')
 
+//Middleware for defining the local storage location
+const storage = multer.diskStorage({
+    destination: "./public",
+    filename: (req, file, cb) => {
+        cb(null, uuidv4() + '-' + Date.now() + path.extname(file.originalname));
+    }
+})
+
+const fileFilter = (req, file, cb) => {
+    const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (allowedFileTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
+const upload = multer({ storage, fileFilter })
+
+
 //User Routes
 // Register a new user
-router.post('/register', userCntroller.register)
+router.post('/register', upload.single('photo'), userCntroller.register)
 //Login user
 router.post('/login', userCntroller.login)
+//Edit User Details
+router.patch('/update/:_id', [varify.auth], userCntroller.updateUser)
 //Reset password Link
 router.post('/password-reset', resetPassword.resetPasswordLink)
 //Reset password
@@ -61,5 +83,4 @@ router.delete('/todo/:_id', todoController.deleteTodo)
 //     res.todo = todo
 //     next()
 // }
-
 module.exports = router
