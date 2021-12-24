@@ -4,11 +4,11 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 const { v4: uuidv4 } = require('uuid')
-let path = require('path')
 const varify = require('../auth/authentication')
 const userCntroller = require('../controller/usersController')
 const todoController = require('../controller/todoController')
 const resetPassword = require('../controller/passwordReset')
+var path = require('path');
 
 //Middleware for defining the local storage location
 const storage = multer.diskStorage({
@@ -27,7 +27,6 @@ const fileFilter = (req, file, cb) => {
     }
 }
 const upload = multer({ storage, fileFilter })
-
 
 //User Routes
 // Register a new user

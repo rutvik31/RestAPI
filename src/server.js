@@ -13,6 +13,10 @@ db.once('open', () => console.log('Connected to Database'))
 
 app.use(express.json())
 app.use(cors())
+app.use(express.static('public'))
+
+// Virtual Path Prefix '/static'
+app.use('/static', express.static('public'))
 
 const userRouter = require('./route/userRoute')
 
