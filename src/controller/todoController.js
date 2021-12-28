@@ -27,27 +27,6 @@ exports.addTodo = async function (req, res) {
     }
 }
 
-//Update Todo task
-exports.updateTodo = async function (req, res) {
-
-    if (req.body.title != null) {
-        req.Todo.title = req.body.title
-    }
-    if (req.body.text != null) {
-        req.Todo.text = req.body.text
-    }
-    if (req.body.isCompleted != null) {
-        req.Todo.isCompleted = req.body.isCompleted
-    }
-    try {
-        let updateTodo = await res.Todo.save()
-        res.json(updateTodo)
-    } catch (err) {
-        res.status(400).json({ err: err.message })
-    }
-
-}
-
 //Delete task 
 exports.deleteTodo = async function (req, res) {
     try {
@@ -61,7 +40,7 @@ exports.deleteTodo = async function (req, res) {
 //Get a todo
 exports.getTodoList = async function (req, res) {
     const auth = jwt.decode(req.headers.authorization)
-    const todo = await Todo.aggregate([
+    let q = [
         {
             $addFields: {
                 "createdAt": {
@@ -78,7 +57,32 @@ exports.getTodoList = async function (req, res) {
                 createdAt: req.query.date
             }
         }
-    ])
+
+    ]
+    if ("search" in req.query) {
+        let sc = {
+            $match: {
+                $or: [{
+                    title: new RegExp(req.query.search.trim(), "ig")
+                },
+                {
+                    text: new RegExp(req.query.search.trim(), "ig")
+                }]
+            }
+        }
+        q.unshift(sc)
+    }
+
+    if ("sort" in req.query) {
+        const sortf = {
+            $sort: {
+                title: parseInt(req.query.sort)
+            }
+        }
+        q.push(sortf)
+    }
+
+    const todo = await Todo.aggregate(q)
     return res.status(200).send({ status: "success", data: todo })
 }
 // 

@@ -56,7 +56,7 @@ exports.login = async function (req, res) {
         const token = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECERT)
         return res.send({ status: "success", data: { token: token } })
     } else {
-        return res.status(401).send({ status: "error", message: "Email or password don't match" })
+        return res.status(422).send({ status: "error", message: "Email or password don't match" })
     }
 }
 
