@@ -40,7 +40,7 @@ router.post('/password-reset', resetPassword.resetPasswordLink)
 //Reset password
 router.post('/password-reset/:userId/:token', resetPassword.resetPassword)
 //Get user
-router.get('/getData', [varify.auth], userCntroller.getData)
+router.get('/getData/', [varify.auth], userCntroller.getData)
 
 //Todo Routes
 router.post('/todo', [varify.auth], todoController.addTodo)

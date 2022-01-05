@@ -57,8 +57,8 @@ exports.getTodoList = async function (req, res) {
                 createdAt: req.query.date
             }
         }
-
     ]
+
     if ("search" in req.query) {
         let sc = {
             $match: {
@@ -82,10 +82,28 @@ exports.getTodoList = async function (req, res) {
         q.push(sortf)
     }
 
-    const todo = await Todo.aggregate(q)
-    return res.status(200).send({ status: "success", data: todo })
+    if ("page" in req.query && "size" in req.query) {
+        const pageF = {
+            $facet: {
+                meta: [
+                    { $count: "title" }
+                ],
+                data: [
+                    { $skip: (parseInt(req.query.page) - 1) * parseInt(req.query.size) },
+                    { $limit: parseInt(req.query.size) }
+                ]
+            }
+        }
+        q.push(pageF)
+    }
+    try {
+        const todo = await Todo.aggregate(q)
+        return res.status(200).send({ status: "success", data: todo[0] })
+    } catch (error) {
+        return res.status(500).send({ status: "error", error: error })
+    }
 }
-// 
+
 //Check a todo is completed or not 
 exports.toggleTodo = async function (req, res) {
 
