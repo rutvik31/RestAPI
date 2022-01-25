@@ -68,6 +68,9 @@ exports.getTodoList = async function (req, res) {
                 },
                 {
                     text: new RegExp(req.query.search.trim(), "ig")
+                },
+                {
+                    priority: new RegExp(req.query.search.trim(), "ig")
                 }]
             }
         }
