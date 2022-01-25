@@ -17,6 +17,7 @@ exports.addTodo = async function (req, res) {
     const todo = new Todo({
         title: req.body.title,
         text: req.body.text,
+        priority: req.body.priority,
         userId: auth._id
     })
     try {

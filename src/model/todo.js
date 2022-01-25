@@ -13,6 +13,10 @@ const todoSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    priority: {
+        type: String,
+        require: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
