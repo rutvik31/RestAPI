@@ -72,7 +72,7 @@ exports.getData = async function (req, res) {
 //Update user
 exports.updateUser = async function (req, res) {
     try {
-        const user = await User.findByIdAndUpdate(req.params._id, req.body, { new: true })   
+        const user = await User.findByIdAndUpdate(req.params._id, req.body, { new: true })
         const token = jwt.sign(JSON.stringify(user), process.env.TOKEN_SECERT)
         return res.status(200).send({ status: "success", data: token })
     } catch (err) {
